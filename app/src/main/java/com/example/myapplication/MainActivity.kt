@@ -8,6 +8,7 @@ import com.mapbox.geojson.FeatureCollection
 import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.style.sources.addSource
 import com.mapbox.maps.extension.style.sources.generated.geoJsonSource
+import com.mapbox.maps.extension.style.sources.generated.vectorSource
 
 var mapView: MapView? = null
 
@@ -22,11 +23,16 @@ class MainActivity : AppCompatActivity() {
         val styleJson = resources.openRawResource(R.raw.style).bufferedReader().use { it.readText() }
 
         mapView?.getMapboxMap()?.loadStyleJson(styleJson) {
-            sources.forEach { (id, featureCollection) ->
-                it.addSource(geoJsonSource(id) {
-                    featureCollection(featureCollection)
-                })
-            }
+            it.addSource(
+                vectorSource("maatvoering-lijn") {
+                    url("http://api.mapbox.com/v4/appsgoconnectit.maatvoering-lijn.json?access_token=" + getString(R.string.mapbox_access_token))
+                }
+            )
+//            sources.forEach { (id, featureCollection) ->
+//                it.addSource(geoJsonSource(id) {
+//                    featureCollection(featureCollection)
+//                })
+//            }
             it.addImage("carrow-10-#000000.png", image!!)
         }
     }
